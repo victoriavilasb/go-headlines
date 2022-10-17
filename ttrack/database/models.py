@@ -42,7 +42,7 @@ class Task(Base):
     update_at = Column(DateTime, nullable=False, default=datetime.utcnow(), onupdate=datetime.utcnow())
 
     def __repr__(self) -> str:
-        return "<Task(name='%s', project_id='%s' status='%s', created_at='%s', updated_at= '%s')>" % (
+        return "<Task(name='%s', project_id='%s', status='%s', created_at='%s', updated_at= '%s')>" % (
             self.name,
             self.project_id,
             self.status,
