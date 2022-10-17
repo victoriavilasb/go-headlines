@@ -23,7 +23,7 @@ class ProjectStatus(Enum):
 
 def upgrade() -> None:
     op.create_table(
-        'project',
+        'projects',
         sa.Column('id', sa.Integer, primary_key=True),
         sa.Column('name', sa.String()),
         sa.Column('status', sa.Enum(ProjectStatus), default=ProjectStatus.active)
@@ -31,4 +31,4 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    op.drop_table('project')
+    op.drop_table('projects')
