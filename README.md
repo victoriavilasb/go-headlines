@@ -7,7 +7,7 @@ ttrack is an application built in python to track work.
 |-------------|-------------------------------------------------------------------|---------|
 | version     | prints the current version of the project                         | -       |
 | help        | shows the global help message for the entire application          | -       |
-| init        | starts a new task. -i option creates an interruption              |         |
+| start       | starts a new task. -i option creates an interruption              |         |
 | finish      | finishes a task. default is the running task. -t specifies a task |         |
 | report      | TODO                                                              |         |
 

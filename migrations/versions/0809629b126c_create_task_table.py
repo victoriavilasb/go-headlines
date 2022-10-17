@@ -22,19 +22,17 @@ class TaskStatus(Enum):
     interrupted = 'INTERRUPTED'
     finished = 'FINISHED'
 
-
 def upgrade() -> None:
     op.create_table(
-        'task',
+        'tasks',
         sa.Column('id', sa.Integer, primary_key=True),
-        sa.Column('project_id', sa.Integer, sa.ForeignKey('project.id')),
+        sa.Column('project_id', sa.Integer, sa.ForeignKey('projects.id')),
         sa.Column('name', sa.String()),
         sa.Column('status', sa.Enum(TaskStatus), default=TaskStatus.running),
         sa.Column('created_at', sa.DateTime, default=datetime.utcnow),
         sa.Column('updated_at', sa.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow),
     )
 
-
 def downgrade() -> None:    
-    op.drop_table('task')
+    op.drop_table('tasks')
     sa.Enum(name='taskstatus').drop(op.get_bind())
