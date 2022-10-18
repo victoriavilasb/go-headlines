@@ -49,3 +49,19 @@ class Task(Base):
             self.created_at,
             self.update_at
         )
+
+class Interruption(Base):
+    __table_name__ = "interruptions"
+
+    interruptor_id = Column(Integer, ForeignKey('tasks.id'), primary_key=True, nullable=True)
+    interrupted_id = Column(Integer, ForeignKey('tasks.id'), primary_key=True, nullable=True)
+    created_at = Column(DateTime, primary_key=True, nullable=False, default=datetime.utcnow())
+    update_at = Column(DateTime, nullable=False, default=datetime.utcnow(), onupdate=datetime.utcnow())
+
+    def __repr__(self) -> str:
+        return "<Interruption(interruptior_id='%s', interrupted_id='%s', created_at='%s', updated_at= '%s')>" % (
+            self.interruptor_id,
+            self.interrupted_id,
+            self.created_at,
+            self.update_at
+        )
