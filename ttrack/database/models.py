@@ -77,4 +77,17 @@ class Tag(Base):
             self.name
         )
 
+class TaskTag(Base):
+    __table_name__ = "task_tags"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    task_id = Column(Integer, ForeignKey('tasks.id'), nullable=True)
+    tag_id = Column(Integer, ForeignKey('tags.id'), nullable=True)
+
+    def __repr__(self) -> str:
+        return "<TaskTag(task_id='%s', tag_id='%s')>" % (
+            self.task_id,
+            self.tag_id
+        )
+
 
