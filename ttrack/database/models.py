@@ -76,3 +76,5 @@ class Tag(Base):
         return "<Tag(name='%s')>" % (
             self.name
         )
+
+
