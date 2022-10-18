@@ -65,3 +65,16 @@ class Interruption(Base):
             self.created_at,
             self.update_at
         )
+
+class Tag(Base):
+    __table_name__ = "tags"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=False)
+
+    def __repr__(self) -> str:
+        return "<Tag(name='%s')>" % (
+            self.name
+        )
+
+
