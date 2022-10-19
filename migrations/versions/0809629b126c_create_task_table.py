@@ -20,6 +20,7 @@ depends_on = None
 class TaskStatus(Enum):
     running = 'RUNNING'
     interrupted = 'INTERRUPTED'
+    paused = 'PAUSED'
     finished = 'FINISHED'
 
 def upgrade() -> None:
@@ -27,7 +28,7 @@ def upgrade() -> None:
         'tasks',
         sa.Column('id', sa.Integer, primary_key=True),
         sa.Column('project_id', sa.Integer, sa.ForeignKey('projects.id')),
-        sa.Column('name', sa.String()),
+        sa.Column('name', sa.String(), unique=True),
         sa.Column('status', sa.Enum(TaskStatus), default=TaskStatus.running),
         sa.Column('created_at', sa.DateTime, default=datetime.utcnow),
         sa.Column('updated_at', sa.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow),

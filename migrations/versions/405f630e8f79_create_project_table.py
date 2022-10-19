@@ -24,7 +24,7 @@ def upgrade() -> None:
     op.create_table(
         'projects',
         sa.Column('id', sa.Integer, primary_key=True),
-        sa.Column('name', sa.String()),
+        sa.Column('name', sa.String(), unique=True),
         sa.Column('status', sa.Enum(ProjectStatus), default=ProjectStatus.active)
     )
 
