@@ -20,7 +20,6 @@ class ProjectStatus(Enum):
     archived = 'ARCHIVED'
     active = 'ACTIVE'
 
-
 def upgrade() -> None:
     op.create_table(
         'projects',

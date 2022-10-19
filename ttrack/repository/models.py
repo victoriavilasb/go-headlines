@@ -1,3 +1,5 @@
+import sqlalchemy as db
+
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from datetime import datetime
@@ -15,29 +17,28 @@ class TaskStatus(Enum):
     finished = 'FINISHED'
 
 class Project(Base):
-    __table_name__ = "projects"
+    __tablename__ = "projects"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
-    status = Column(String, nullable=False, default=ProjectStatus.active)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
-    update_at = Column(DateTime, nullable=False, default=datetime.utcnow(), onupdate=datetime.utcnow())
+    status = Column(db.Enum(ProjectStatus), nullable=False, default=ProjectStatus.active)
 
     def __repr__(self) -> str:
-        return "<Project(name='%s', status='%s', created_at='%s', updated_at= '%s')>" % (
+        return "<Project(name='%s', status='%s')>" % (
             self.name,
             self.status,
-            self.created_at,
-            self.update_at
         )
 
+    def get_id(self):
+        return self.id
+
 class Task(Base):
-    __table_name__ = "tasks"
+    __tablename__ = "tasks"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     project_id = Column(Integer, ForeignKey('projects.id'), nullable=True)
     name = Column(String, nullable=False)
-    status = Column(String, nullable=False, default=TaskStatus.running)
+    status = Column(db.Enum(TaskStatus), nullable=False, default=TaskStatus.running)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
     update_at = Column(DateTime, nullable=False, default=datetime.utcnow(), onupdate=datetime.utcnow())
 
@@ -51,7 +52,7 @@ class Task(Base):
         )
 
 class Interruption(Base):
-    __table_name__ = "interruptions"
+    __tablename__ = "interruptions"
 
     interruptor_id = Column(Integer, ForeignKey('tasks.id'), primary_key=True, nullable=True)
     interrupted_id = Column(Integer, ForeignKey('tasks.id'), primary_key=True, nullable=True)
@@ -67,7 +68,7 @@ class Interruption(Base):
         )
 
 class Tag(Base):
-    __table_name__ = "tags"
+    __tablename__ = "tags"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
@@ -78,7 +79,7 @@ class Tag(Base):
         )
 
 class TaskTag(Base):
-    __table_name__ = "task_tags"
+    __tablename__ = "task_tags"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     task_id = Column(Integer, ForeignKey('tasks.id'), nullable=True)
