@@ -1,21 +1,29 @@
 # Here we will have methods that modify the database 
 
-from connect import session
-from models import Project
+from ttrack.repository.database.models import Project, Task
 
-def create_project(name):
-    p = Project(name=name)
-    session.add(p)
-    session.commit()
+class Command:
+    def __init__(self, session):
+        self.session = session
 
-def archive_project(id):
-    pass
+    def create_project(self, name):
+        p = Project(name=name)
+        self.session.add(p)
+        self.session.commit()
 
-def list_projects():
-    pass
+    def create_task(self, name, project_name = None):
+        project = self._get_project_id_by_name(project_name) or {}
+        t = Task(name=name, project_id=project.id)
+        self.session.add(t)
+        self.session.commit()
 
-def main():
-    create_project("tes_2")
+    def archive_project(self, name):
+        pass
 
-if __name__ == "__main__":
-    main()
+    def list_projects():
+        pass
+
+    def _get_project_by_name(self, project_name=None):
+        if project_name != None:
+            return self.session.query(Project).filter(Project.name == project_name).one()
+

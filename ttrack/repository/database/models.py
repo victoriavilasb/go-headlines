@@ -13,6 +13,7 @@ class ProjectStatus(Enum):
 
 class TaskStatus(Enum):
     running = 'RUNNING'
+    paused = 'PAUSED'
     interrupted = 'INTERRUPTED'
     finished = 'FINISHED'
 
