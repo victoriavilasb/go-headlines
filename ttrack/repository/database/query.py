@@ -3,7 +3,7 @@
 from ttrack.repository.database.models import Project, ProjectStatus, Task, TaskStatus
 from ttrack.repository.query import BaseQuery
 
-class Query:
+class Query(BaseQuery):
     def __init__(self, session):
         self.session = session
 

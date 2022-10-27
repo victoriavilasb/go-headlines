@@ -3,7 +3,7 @@
 from ttrack.repository.database.models import Project, ProjectStatus, Task, Tag, TaskStatus, TaskTag
 from ttrack.repository.command import BaseCommand
 
-class Command():
+class Command(BaseCommand):
     def __init__(self, session):
         self.session = session
 
