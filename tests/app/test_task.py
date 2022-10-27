@@ -26,5 +26,3 @@ class TestTask(unittest.TestCase):
         task.start('fake-task-name')
 
         mock_method.assert_called_with('fake-task-name', None)
-
-

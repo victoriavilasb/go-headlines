@@ -2,8 +2,9 @@ import unittest
 
 from unittest.mock import MagicMock
 from ttrack.repository.database.command import Command
-from ttrack.repository.database.models import Project, ProjectStatus, Task
+from ttrack.repository.database.models import Project, ProjectStatus, Tag, Task
 
+# TODO: improve tests to test parameters being passed
 class TestCommand(unittest.TestCase):
 
     def setUp(self):
@@ -31,6 +32,7 @@ class TestCommand(unittest.TestCase):
         self.session.add.assert_called_once()
         self.session.commit.assert_called_once()
 
+        
         
 
 
