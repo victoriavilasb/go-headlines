@@ -28,4 +28,12 @@ class BaseCommand:
     @abstractmethod
     def remove_tag_from_task(self, tag_name, task_name):
         pass
-    
+
+    @abstractmethod
+    def add_task_to_project(self, task_name, project_name):
+        pass
+
+    @abstractmethod
+    def remove_task_from_project(self, task_name, project_name):
+        pass
+

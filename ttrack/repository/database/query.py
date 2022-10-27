@@ -1,6 +1,6 @@
 # Here we will have methods that modify the database 
 
-from ttrack.repository.database.models import Project, ProjectStatus, Task, TaskStatus
+from ttrack.repository.database.models import Project, ProjectStatus, Task, TaskStatus, Tag
 from ttrack.repository.query import BaseQuery
 
 class Query(BaseQuery):
@@ -20,3 +20,6 @@ class Query(BaseQuery):
             s.filter(status = TaskStatus(status).value)
         
         return s.all()
+
+    def find_tag(self, name) -> Tag:
+        return self.session.query(Tag).filter(Tag.name == name).one()
