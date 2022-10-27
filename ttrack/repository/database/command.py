@@ -43,12 +43,14 @@ class Command(BaseCommand):
         self.session.add(TaskTag(task_id=task.id, tag_id=tag.id))
         self.session.commit()
 
-    def remove_tag_from_task(self, task_name, tag_name):
-        task = self.session.query(Task).filter(Task.name == task_name).one()
-        tag = self.session.query(Tag).filter(Tag.name == tag_name).one()
+    # def remove_tag_from_task(self, task_name, tag_name):
+    #     task = self.session.query(Task).filter(Task.name == task_name).one()
+    #     tag = self.session.query(Tag).filter(Tag.name == tag_name).one()
 
-        if tag == None or task == None:
-            raise
+    #     if tag == None or task == None:
+    #         raise
+
+    #     TODO: fi
 
     def create_tag(self, name) -> Tag:
         tag = Tag(name=name)
