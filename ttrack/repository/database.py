@@ -1,26 +1,26 @@
 # Here we will have methods that modify the database 
 
-from ttrack.repository.database.models import Project, ProjectStatus, Task, Tag, TaskStatus, TaskTag
-from ttrack.repository.command import BaseCommand
-from ttrack.repository.database.query import Query
+from ttrack.repository.models import Project, ProjectStatus, Task, Tag, TaskStatus, TaskTag
+from ttrack.repository.storage import Storage
 
-class Command(BaseCommand):
-    def __init__(self, session):
-        self.session = session
-        self.query = Query(session)
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+class Database(Storage):    
+    def __init__(self, connection_data: dict):
+        db_string = connection_data["uri"]
+
+        Session = sessionmaker()
+        Session.configure(bind=create_engine(db_string))
+
+        self.session = Session()
 
     def create_project(self, name):
         p = Project(name=name)
         self.session.add(p)
         self.session.commit()
 
-    def create_task(self, name, project_name = None) -> Task:
-        project = self._get_project_by_name(project_name)
-        project_id = None
-
-        if project != None:
-            project_id = project.id
-
+    def create_task(self, name, project_id = None) -> Task:
         t = Task(name=name, project_id=project_id)
         self.session.add(t)
         self.session.commit()
@@ -62,10 +62,32 @@ class Command(BaseCommand):
         self.session.delete(TaskStatus).where(task_id=task.id, tag_id=tag.id)
         self.session.commit()
 
-    def _get_project_by_name(self, project_name):
-        return self.session.query(Project).filter(Project.name == project_name).one()
+    def list_projects(self, status = None):
+        s = self.session.query(Project)
+        if status != None:
+            s.filter(status = ProjectStatus(status).value)
+        
+        return s.all()
 
-    def _get_task_by_name(self, task_name):
-        return self.session.query(Task).filter(Project.name == task_name).one()
+    def list_tasks(self, status = None):
+        s = self.session.query(Task)
+        if status != None:
+            s.filter(status = TaskStatus(status).value)
+        
+        return s.all()
+
+    def find_tag(self, name) -> Tag:
+        return self.session.query(Tag).filter(Tag.name == name).one()
+    
+    def find_project(self, name) -> Project:
+        return self.session.query(Project).filter(Project.name == name).one()
+
+    def find_task(self, name) -> Task:
+        return self.session.query(Task).filter(Task.name == name).one()
+
+    def _db_session(self, uri: str):
+        db_string = uri
+        s = sessionmaker().configure(bind=create_engine(db_string))
+        return s()
 
 
