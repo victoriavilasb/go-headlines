@@ -1,35 +1,26 @@
 from enum import Enum
 from typing import Optional
 import typer
+import yaml
 
 import os
 from os import environ
 from pathlib import Path
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
 from ttrack import __app_name__, __version__
 from ttrack.app.project import ProjectApplication
 from ttrack.app.task import TaskApplication
 
-import yaml
+CONFIG_PATH = f"{os.environ['HOME']}/.ttrack/config.yaml"
 
 ttrack = typer.Typer()
 start_app = typer.Typer()
 ttrack.add_typer(start_app, name = "start")
 
-CONFIG_PATH = f"{os.environ['HOME']}/.ttrack/config.yaml"
-
 class StorageType(Enum):
     database = "DATABASE"
     local = "LOCAL"
     blob = "BLOB"
-
-def db_session(uri: str):
-    db_string = uri
-    sessionmaker().configure(bind=create_engine(db_string))
-    return Session()
 
 def _version_callback(value: bool) -> None:
     if value:
@@ -50,6 +41,12 @@ def config(
         connection = {
             'uri': uri
         }
+    elif StorageType.local == storage:
+        connection = {
+            'path': path
+        }
+    elif StorageType.blob == storage:
+        connection = {}
     else:
         raise Exception("Storage is not an option")
 

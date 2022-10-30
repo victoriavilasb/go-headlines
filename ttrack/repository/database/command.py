@@ -4,10 +4,13 @@ from ttrack.repository.database.models import Project, ProjectStatus, Task, Tag,
 from ttrack.repository.command import BaseCommand
 from ttrack.repository.database.query import Query
 
-class Command(BaseCommand):
-    def __init__(self, session):
-        self.session = session
-        self.query = Query(session)
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+class Command(BaseCommand):    
+    def __init__(self, connection_data: dict):
+        self.session = self.db_session(connection_data.uri)
+        self.query = Query(self.session)
 
     def create_project(self, name):
         p = Project(name=name)
@@ -67,5 +70,10 @@ class Command(BaseCommand):
 
     def _get_task_by_name(self, task_name):
         return self.session.query(Task).filter(Project.name == task_name).one()
+
+    def _db_session(self, uri: str):
+        db_string = uri
+        s = sessionmaker().configure(bind=create_engine(db_string))
+        return s()
 
 
