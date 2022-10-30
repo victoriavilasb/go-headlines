@@ -113,5 +113,3 @@ def task_application():
 def project_application():
     return ProjectApplication(storage_from_configuration())
         
-
-        

@@ -58,3 +58,4 @@ class StorageType(Enum):
     BLOB = "blob"
     LOCAL = "local"
     DATABASE = "database"
+    
