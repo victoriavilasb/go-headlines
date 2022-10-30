@@ -23,3 +23,9 @@ class Query(BaseQuery):
 
     def find_tag(self, name) -> Tag:
         return self.session.query(Tag).filter(Tag.name == name).one()
+    
+    def find_project(self, name) -> Project:
+        return self.session.query(Project).filter(Project.name == name).one()
+
+    def find_task(self, name) -> Task:
+        return self.session.query(Task).filter(Task.name == name).one()
