@@ -1,7 +1,6 @@
 from enum import Enum
-from ttrack.repository.database.command import Command
-from ttrack.repository.database.models import ProjectStatus
-from ttrack.repository.database.query import Query
+from ttrack.repository.storage import Storage
+from ttrack.repository.models import ProjectStatus
 
 class ProjectApplication:
     class ProjectStatus(Enum):
@@ -10,18 +9,17 @@ class ProjectApplication:
         failed = 'FAILED'
         success = 'SUCCESS'
 
-    def __init__(self, command: Command, query: Query):
-        self.command = command
-        self.query = query
+    def __init__(self, storage: Storage):
+        self.storage = storage
 
     def start(self, name: str):
-        return self.command.create_project(name)
+        return self.storage.create_project(name)
 
     def archive(self, name):
         # check if there are tasks running or paused in this project
 
         # return with option to kill, finish or detatch tasks
-        return self.command.update_project_status(name, ProjectStatus.archived)
+        return self.storage.update_project_status(name, ProjectStatus.archived)
 
     def active(self, name):
-        return self.command.update_project_status(name, ProjectStatus.active)
+        return self.storage.update_project_status(name, ProjectStatus.active)

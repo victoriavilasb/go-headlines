@@ -1,6 +1,7 @@
 from abc import abstractmethod
+from enum import Enum
 
-class BaseCommand:
+class Storage:
     @abstractmethod
     def create_task(self, name, project_name = None):
         pass
@@ -37,3 +38,23 @@ class BaseCommand:
     def remove_task_from_project(self, task_name, project_name):
         pass
 
+    @abstractmethod
+    def list_projects(self):
+        pass
+
+    @abstractmethod
+    def list_tasks(self):
+        pass
+
+    @abstractmethod
+    def find_tag(self, name):
+        pass
+
+    @abstractmethod
+    def find_task(self, name):
+        pass
+
+class StorageType(Enum):
+    BLOB = "blob"
+    LOCAL = "local"
+    DATABASE = "database"
