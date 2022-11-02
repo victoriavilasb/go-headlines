@@ -14,12 +14,9 @@ class ProjectApplication:
         return self.storage.create_project(name)
 
     def archive(self, name):
-        # check if there are tasks running or paused in this project
-
-        # return with option to kill, finish or detatch tasks
         return self.storage.update_project_status(name, ProjectStatus.archived)
 
-    def active(self, name):
+    def activate(self, name):
         return self.storage.update_project_status(name, ProjectStatus.active)
 
     def list(self, status):
@@ -32,3 +29,26 @@ class ProjectApplication:
             return
             
         return self.storage.list_projects(app_status)
+
+    def add_project_to_task(self, project_name: str, task_name: str):
+        project = self.storage.find_project(project_name)
+        task = self.storage.find_task(task_name)
+
+
+        if len(project) == 0:
+            print("ERROR: project does not exist")
+            return
+        if len(task) == 0:
+            print("ERROR: task does not exist")
+            return
+
+        task = self.storage.add_project_to_task(project, task)
+
+    def remove_project_from_task(self, task_name: str):
+        task = self.storage.find_task(task_name)
+
+        if len(task) == 0:
+            print("ERROR: task does not exist")
+            return
+
+        task = self.storage.remove_project_from_task(task)

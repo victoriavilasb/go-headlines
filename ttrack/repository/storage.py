@@ -23,19 +23,19 @@ class Storage:
         pass
 
     @abstractmethod
-    def add_tag_to_task(self, tag_name, task_name):
+    def add_tag_to_task(self, tag, task):
         pass
 
     @abstractmethod
-    def remove_tag_from_task(self, tag_name, task_name):
+    def remove_tag_from_task(self, tag, task):
         pass
 
     @abstractmethod
-    def add_task_to_project(self, task_name, project_name):
+    def add_project_to_task(self, project, task):
         pass
 
     @abstractmethod
-    def remove_task_from_project(self, task_name, project_name):
+    def remove_project_from_task(self, task):
         pass
 
     @abstractmethod
@@ -52,6 +52,10 @@ class Storage:
 
     @abstractmethod
     def find_task(self, name):
+        pass
+
+    @abstractmethod
+    def find_project(self, name):
         pass
 
 class StorageType(Enum):

@@ -2,7 +2,7 @@
 
 from ttrack.repository.models import Project, ProjectStatus, Task, Tag, TaskStatus, TaskTag
 from ttrack.repository.storage import Storage
-from sqlalchemy import create_engine, update, Enum
+from sqlalchemy import create_engine, update
 from sqlalchemy.orm import sessionmaker
 
 class Database(Storage):    
@@ -69,6 +69,26 @@ class Database(Storage):
 
         self.session.commit()
 
+    def add_project_to_task(self, project, task):
+        stmt = (
+            update(Task)
+                .where(Task.name == task["name"])
+                .values(project_id = project["id"])
+        )
+
+        self.session.execute(stmt)
+        self.session.commit()
+
+    def remove_project_from_task(self, task):
+        stmt = (
+            update(Task)
+                .where(Task.name == task["name"])
+                .values(project_id = None)
+        )
+
+        self.session.execute(stmt)
+        self.session.commit()
+
     def list_projects(self, status = None):
         s = self.session.query(Project)
         if status != None:
@@ -88,9 +108,6 @@ class Database(Storage):
         return tag.as_dict() if tag != None else {}
     
     def find_project(self, name):
-        if not name:
-            return {}
-
         project = self.session.query(Project).filter(Project.name == name).one_or_none()
         return project.as_dict() if project != None else {}
 
