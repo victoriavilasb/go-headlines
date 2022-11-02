@@ -55,6 +55,20 @@ def start_task(
     """
     task_application().start(name, project, force)
 
+@ttrack.command("add-tag")
+def tag(
+    tag: str = typer.Option(..., "--tag", help="tag name"),
+    task: str = typer.Option(..., "--task", help="task name"),
+):
+    task_application().add_tag_to_task(tag, task)
+
+@ttrack.command("remove-tag")
+def tag(
+    tag: str = typer.Option(..., "--tag", help="tag name"),
+    task: str = typer.Option(..., "--task", help="task name"),
+):
+    task_application().remove_tag_from_task(tag, task)
+
 @ttrack.command('finish')
 def finish(
     project: str = typer.Option(None, "--project", help="project name", show_default=False),
@@ -88,8 +102,8 @@ def pause(
 
     task_application().pause(task)
 
-@ttrack.command("pause")
-def pause(
+@ttrack.command("resume")
+def resume(
     task: str = typer.Option(None, "--task", help="task name", show_default=False)
 ):
     """
@@ -114,14 +128,14 @@ def list(
     status: str = typer.Option("", "--status", help="status of the given resource", show_default=False), 
 ):
     if projects and tasks:
-        print("error: choose only one resource to list")
+        print("ERROR: choose only one resource to list")
         return
     elif projects:
         print_projects(project_application().list(status))
     elif tasks:
         print_tasks(task_application().list(status))
     else:
-        print("error: please choose a resource to list (projects or tasks")
+        print("ERROR: please choose a resource to list (projects or tasks")
 
 def _version_callback(value: bool) -> None:
     if value:

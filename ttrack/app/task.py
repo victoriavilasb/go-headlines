@@ -15,7 +15,7 @@ class TaskApplication:
 
     def start(self, name: str, project_name: str, force: bool):
         if project_name and self.storage.find_project(project_name) == None:
-            print("this project does not exist. You should choose an existent project.")
+            print("ERROR: this project does not exist. You should choose an existent project.")
             print("run ttrack list --project to see all projects available")
             return
             
@@ -24,7 +24,7 @@ class TaskApplication:
             if force:
                 self.pause(running_task["name"])
             else:
-                print("Task <{}> is running. You should finish or pause this task before starting another.".format(running_task["name"]))
+                print("ERROR: task <{}> is running. You should finish or pause this task before starting another.".format(running_task["name"]))
                 return
         
         self.storage.create_task(name, project_name)
@@ -35,7 +35,7 @@ class TaskApplication:
     def pause(self, name):
         status = self.get_task_status(name)
         if status and status == self.Status.finished.value:
-            print("failed: {} already finished".format(name))
+            print("ERROR: {} already finished".format(name))
             
         self.storage.update_task_status(name, self.Status.paused.value)
 
@@ -62,10 +62,35 @@ class TaskApplication:
         try:
             myStatus = self.Status(status.upper()).value if len(status) > 0 else None
         except:
-            print("Status <{}> is not a option".format(status))
+            print("ERROR: status <{}> is not a option".format(status))
             return
 
         return self.storage.list_tasks(myStatus)
+
+    def add_tag_to_task(self, tag_name: str, task_name: str):
+        tag = self.storage.find_tag(tag_name)
+        task = self.storage.find_task(task_name)
+
+        if len(tag) == 0:
+            tag = self.storage.create_tag(tag_name)
+        if len(task) == 0:
+            print("ERROR: task does not exist")
+            return
+
+        task = self.storage.add_tag_to_task(tag, task)
+
+    def remove_tag_from_task(self, tag_name: str, task_name: str):
+        tag = self.storage.find_tag(tag_name)
+        task = self.storage.find_task(task_name)
+
+        if len(tag) == 0:
+            print("ERROR: tag does not exist")
+            return
+        if len(task) == 0:
+            print("ERROR: task does not exist")
+            return
+
+        task = self.storage.remove_tag_from_task(tag, task)
 
     def resume(self):
         pass
