@@ -2,8 +2,7 @@
 
 from ttrack.repository.models import Project, ProjectStatus, Task, Tag, TaskStatus, TaskTag
 from ttrack.repository.storage import Storage
-
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, update, Enum
 from sqlalchemy.orm import sessionmaker
 
 class Database(Storage):    
@@ -20,12 +19,15 @@ class Database(Storage):
         self.session.add(p)
         self.session.commit()
 
-    def create_task(self, name, project_id = None) -> Task:
-        t = Task(name=name, project_id=project_id)
-        self.session.add(t)
+    def create_task(self, name, project_name = None) -> Task:
+        project = self.find_project(project_name)
+
+        task = Task(name=name, project_id=project["id"] if "id" in project else None)
+        
+        self.session.add(task)
         self.session.commit()
 
-        return t
+        return task.as_dict()
 
     def create_tag(self, name) -> Tag:
         tag = Tag(name=name)
@@ -36,7 +38,13 @@ class Database(Storage):
         return tag
 
     def update_task_status(self, name, status):
-        self.session.update(Task).where(Task.name == name).values(status = TaskStatus(status).value)
+        stmt = (
+            update(Task)
+                .where(Task.name == name)
+                .values(status=TaskStatus(status))
+        )
+
+        self.session.execute(stmt)
         self.session.commit()
 
     def update_project_status(self, name, status):
@@ -59,35 +67,43 @@ class Database(Storage):
         if task == None:
             raise Exception("Task does not exist")
 
-        self.session.delete(TaskStatus).where(task_id=task.id, tag_id=tag.id)
+        self.session.delete(TaskTag).where(task_id=task.id, tag_id=tag.id)
         self.session.commit()
 
     def list_projects(self, status = None):
         s = self.session.query(Project)
         if status != None:
-            s.filter(status = ProjectStatus(status).value)
+            s = s.filter(Project.status == ProjectStatus(status))
         
-        return s.all()
+        return [project.as_dict() for project in s.all()]
 
     def list_tasks(self, status = None):
         s = self.session.query(Task)
         if status != None:
-            s.filter(status = TaskStatus(status).value)
-        
-        return s.all()
+            s = s.filter(Task.status == TaskStatus(status))
 
-    def find_tag(self, name) -> Tag:
-        return self.session.query(Tag).filter(Tag.name == name).one()
+        return [task.as_dict() for task in s.all()]
+
+    def find_tag(self, name):
+        tag = self.session.query(Tag).filter(Tag.name == name).one_or_none()
+        return tag.as_dict() if tag != None else {}
     
-    def find_project(self, name) -> Project:
-        return self.session.query(Project).filter(Project.name == name).one()
+    def find_project(self, name):
+        if not name:
+            return {}
 
-    def find_task(self, name) -> Task:
-        return self.session.query(Task).filter(Task.name == name).one()
+        project = self.session.query(Project).filter(Project.name == name).one_or_none()
+        return project.as_dict() if project != None else {}
+
+    def find_task(self, name):
+        task = self.session.query(Task).filter(Task.name == name).one_or_none()
+        return task.as_dict() if task != None else {}
+
+    def find_project_by_id(self, id) -> Project:
+        project = self.session.query(Project).filter(Project.id == id).one_or_none()
+        return project.as_dict if project != None else {}
 
     def _db_session(self, uri: str):
         db_string = uri
         s = sessionmaker().configure(bind=create_engine(db_string))
         return s()
-
-
