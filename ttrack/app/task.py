@@ -57,15 +57,15 @@ class TaskApplication:
         return divmod(duration_in_seconds, 3600)[0]
 
     def list(self, status):
-        myStatus = None
+        my_status = None
 
         try:
-            myStatus = self.Status(status.upper()).value if len(status) > 0 else None
+            my_status = self.Status(status.upper()).value if len(status) > 0 else None
         except:
             print("ERROR: status {} is not a option".format(status))
             return
 
-        return self.storage.list_tasks(myStatus)
+        return self.storage.list_tasks(my_status)
 
     def add_tag_to_task(self, tag_name: str, task_name: str):
         tag = self.storage.find_tag(tag_name)

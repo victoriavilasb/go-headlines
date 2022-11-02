@@ -23,12 +23,12 @@ class ProjectApplication:
         return self.storage.update_project_status(name, ProjectStatus.active)
 
     def list(self, status):
-        appStatus = None
+        app_status = None
 
         try:
-            appStatus = self.Status(status.upper()).value  if len(status) > 0 else None
+            app_status = self.Status(status.upper()).value  if len(status) > 0 else None
         except:
             print("Status <{}> is not a option".format(status))
             return
             
-        return self.storage.list_projects(appStatus)
+        return self.storage.list_projects(app_status)
