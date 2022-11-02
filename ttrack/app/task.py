@@ -24,7 +24,7 @@ class TaskApplication:
             if force:
                 self.pause(running_task["name"])
             else:
-                print("ERROR: task <{}> is running. You should finish or pause this task before starting another.".format(running_task["name"]))
+                print("ERROR: {} is running. You should finish or pause this task before starting another.".format(running_task["name"]))
                 return
         
         self.storage.create_task(name, project_name)
@@ -62,7 +62,7 @@ class TaskApplication:
         try:
             myStatus = self.Status(status.upper()).value if len(status) > 0 else None
         except:
-            print("ERROR: status <{}> is not a option".format(status))
+            print("ERROR: status {} is not a option".format(status))
             return
 
         return self.storage.list_tasks(myStatus)
@@ -92,8 +92,13 @@ class TaskApplication:
 
         task = self.storage.remove_tag_from_task(tag, task)
 
-    def resume(self):
-        pass
+    def resume(self, name):
+        running_task = self._get_running_task()
+        if running_task:
+            print("ERROR: {} is running. You should finish or pause this task before continuing another.".format(running_task["name"]))
+            return
+
+        self.storage.update_task_status(name, self.Status.running.value)
 
     def tag(self, tag_name: str):
         ## if tag does not exist, create

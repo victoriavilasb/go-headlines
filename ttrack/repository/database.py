@@ -51,7 +51,7 @@ class Database(Storage):
         stmt = (
             update(Project)
                 .where(Project.name == name)
-                .values(status = ProjectStatus(status).value)
+                .values(status = ProjectStatus(status))
         )
 
         self.session.execute(stmt)

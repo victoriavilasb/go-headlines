@@ -71,26 +71,43 @@ def tag(
 
 @ttrack.command('finish')
 def finish(
-    project: str = typer.Option(None, "--project", help="project name", show_default=False),
-    projects: str = typer.Option([], "--projects", help="a list of projects separated by comma", show_default=False),
     task: str = typer.Option(None, "--task", help="task name", show_default=False),
     tasks: str = typer.Option([], "--tasks", help="a list of tasks separated by comma", show_default=False)
 ):
     """
     Finishs a task or a project
     """
-
-    projects = projects.split(",") if len(projects) != 0 else []
-    projects.append(project)
-
     tasks = tasks.split(",") if len(tasks) != 0 else []
-    tasks.append(task)
+    if task:
+        tasks.append(task)
+
+    for task_name in tasks:
+        task_application().finish(task_name)
+
+@ttrack.command('continue')
+def finish(
+    task: str = typer.Option(None, "--task", help="task name", show_default=False),
+):
+    """
+    Resume a task
+    """
+    task_application().resume(task)
+
+@ttrack.command('archive')
+def archive(
+    project: str = typer.Option(None, "--project", help="project name", show_default=False),
+    projects: str = typer.Option([], "--projects", help="a list of projects separated by comma", show_default=False)
+):
+    """
+    Archive a task or a project
+    """
+    projects = projects.split(",") if len(projects) != 0 else []
+    if project:
+        projects.append(project)
 
     for project_name in projects:
         project_application().archive(project_name)
 
-    for task_name in tasks:
-        task_application().finish(task_name)
 
 @ttrack.command("pause")
 def pause(
