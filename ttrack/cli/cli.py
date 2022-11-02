@@ -18,8 +18,10 @@ ttrack = typer.Typer()
 
 # Sub commands
 start_app = typer.Typer()
+edit_app = typer.Typer()
 
 ttrack.add_typer(start_app, name = "start")
+ttrack.add_typer(edit_app, name = "edit")
 
 CONFIG_PATH = "{}/.ttrack/config.yaml".format(environ['HOME'])
 
@@ -46,7 +48,7 @@ def config(
 @start_app.command('task')
 def start_task(
     name: str,
-    project: str = typer.Option(None, "--project", help="associates your to an existent project", show_default=False),
+    project: str = typer.Option(None, "--project", help="associates your task to an existent project", show_default=False),
     force: bool = typer.Option(False, "--force", help="forces to create a task even if there is a running task")
 ):
     """
@@ -54,6 +56,22 @@ def start_task(
     As humans beings are not multithreaded, ttrack records just one task at a time
     """
     task_application().start(name, project, force)
+
+@edit_app.command('task')
+def edit_task(
+    name: str,
+    project: str = typer.Option("", "--add-project", help="associates your task to an existent project", show_default=False),
+    remove: bool = typer.Option(False, "--remove-project", help="associates your task to an existent project", show_default=False),
+):
+    """
+    Start a new task (unique name is expected as arg)
+    As humans beings are not multithreaded, ttrack records just one task at a time
+    """
+    if len(project):
+        project_application().add_project_to_task(project, name)
+    if remove:
+        project_application().remove_project_from_task(name)
+        
 
 @ttrack.command("add-tag")
 def tag(
@@ -99,7 +117,7 @@ def archive(
     projects: str = typer.Option([], "--projects", help="a list of projects separated by comma", show_default=False)
 ):
     """
-    Archive a task or a project
+    Archive projects
     """
     projects = projects.split(",") if len(projects) != 0 else []
     if project:
@@ -107,6 +125,21 @@ def archive(
 
     for project_name in projects:
         project_application().archive(project_name)
+
+@ttrack.command('activate')
+def activate(
+    project: str = typer.Option(None, "--project", help="project name", show_default=False),
+    projects: str = typer.Option([], "--projects", help="a list of projects separated by comma", show_default=False)
+):
+    """
+    Activate projects
+    """
+    projects = projects.split(",") if len(projects) != 0 else []
+    if project:
+        projects.append(project)
+
+    for project_name in projects:
+        project_application().activate(project_name)
 
 
 @ttrack.command("pause")
