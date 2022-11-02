@@ -22,7 +22,7 @@ class Database(Storage):
     def create_task(self, name, project_name = None) -> Task:
         project = self.find_project(project_name)
 
-        task = Task(name=name, project_id=project["id"] if "id" in project else None)
+        task = Task(name=name, project_id=project["id"] if len(project) else None)
         
         self.session.add(task)
         self.session.commit()
@@ -35,7 +35,7 @@ class Database(Storage):
         self.session.add(tag)
         self.session.commit()
 
-        return tag
+        return tag.as_dict()
 
     def update_task_status(self, name, status):
         stmt = (
@@ -48,26 +48,25 @@ class Database(Storage):
         self.session.commit()
 
     def update_project_status(self, name, status):
-        self.session.update(Project).where(Project.name == name).values(status = ProjectStatus(status).value)
+        stmt = (
+            update(Project)
+                .where(Project.name == name)
+                .values(status = ProjectStatus(status).value)
+        )
+
+        self.session.execute(stmt)
         self.session.commit()
 
-    def add_tag_to_task(self, task_name, tag):
-        task = self._get_task_by_name(task_name)
-
-        self.session.add(TaskTag(task_id=task.id, tag_id=tag.id))
+    def add_tag_to_task(self, tag, task):
+        self.session.add(TaskTag(task_id=task["id"], tag_id=tag["id"]))
         self.session.commit()
 
-    def remove_tag_from_task(self, task_name, tag_name):
-        tag = self.query.find_tag(tag_name)
-        task = self._get_task_by_name(task_name)
+    def remove_tag_from_task(self, tag, task):
+        tt = self.session.query(TaskTag).where(
+            TaskTag.task_id == task["id"],
+            TaskTag.tag_id == tag["id"]
+        ).delete(synchronize_session=False)
 
-        if tag == None:
-            raise Exception("Tag does not exist")
-
-        if task == None:
-            raise Exception("Task does not exist")
-
-        self.session.delete(TaskTag).where(task_id=task.id, tag_id=tag.id)
         self.session.commit()
 
     def list_projects(self, status = None):
@@ -84,7 +83,7 @@ class Database(Storage):
 
         return [task.as_dict() for task in s.all()]
 
-    def find_tag(self, name):
+    def find_tag(self, name) -> Tag:
         tag = self.session.query(Tag).filter(Tag.name == name).one_or_none()
         return tag.as_dict() if tag != None else {}
     
@@ -95,7 +94,7 @@ class Database(Storage):
         project = self.session.query(Project).filter(Project.name == name).one_or_none()
         return project.as_dict() if project != None else {}
 
-    def find_task(self, name):
+    def find_task(self, name) -> Task:
         task = self.session.query(Task).filter(Task.name == name).one_or_none()
         return task.as_dict() if task != None else {}
 
