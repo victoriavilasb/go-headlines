@@ -4,11 +4,9 @@ from ttrack.repository.database.models import ProjectStatus
 from ttrack.repository.database.query import Query
 
 class ProjectApplication:
-    class ProjectStatus(Enum):
+    class Status(Enum):
         active = 'ACTIVE'
-        archived = 'PAUSED'
-        failed = 'FAILED'
-        success = 'SUCCESS'
+        archived = 'ARCHIVED'
 
     def __init__(self, command: Command, query: Query):
         self.command = command
@@ -24,4 +22,15 @@ class ProjectApplication:
         return self.command.update_project_status(name, ProjectStatus.archived)
 
     def active(self, name):
-        return self.command.update_project_status(name, ProjectStatus.active)
+        return self.storage.update_project_status(name, ProjectStatus.active)
+
+    def list(self, status):
+        appStatus = None
+
+        try:
+            appStatus = self.Status(status.upper()).value  if len(status) > 0 else None
+        except:
+            print("Status <{}> is not a option".format(status))
+            return
+            
+        return self.storage.list_projects(appStatus)

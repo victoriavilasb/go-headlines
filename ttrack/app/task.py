@@ -14,23 +14,36 @@ class TaskApplication:
         self.command = command
         self.query = query
 
-    def start(self, name: str, project_name: str = None):
-        if self.query.find_project(project_name) == None:
-            raise Exception("failed: project does not exist")
-        self.command.create_task(name, project_name)
+
+    def start(self, name: str, project_name: str, force: bool):
+        if project_name and self.storage.find_project(project_name) == None:
+            print("this project does not exist. You should choose an existent project.")
+            print("run ttrack list --project to see all projects available")
+            return
+            
+        running_task = self._get_running_task()
+        if running_task:
+            if force:
+                self.pause(running_task["name"])
+            else:
+                print("Task <{}> is running. You should finish or pause this task before starting another.".format(running_task["name"]))
+                return
+        
+        self.storage.create_task(name, project_name)
 
     def finish(self, name):
-        self.command.update_task_status(name, TaskApplication.TaskStatus.finished)
+        self.storage.update_task_status(name, self.Status.finished.value)
 
     def pause(self, name):
-        if self.get_task_status(name) != self.TaskStatus.finished.value:
-            raise Exception("failed: task is not running")
+        status = self.get_task_status(name)
+        if status and status == self.Status.finished.value:
+            print("failed: {} already finished".format(name))
             
-        self.command.update_task_status(name, TaskApplication.TaskStatus.paused)
+        self.storage.update_task_status(name, self.Status.paused.value)
 
     def get_task_status(self, name):
-         task = self.query.find_task(name)
-         return task.status
+         task = self.storage.find_task(name)
+         return task["status"] if "status" in task else None
         
     def get_task_duration_in_hours(self, name):
         task = self.query.find_task(name)
@@ -45,6 +58,17 @@ class TaskApplication:
 
         return divmod(duration_in_seconds, 3600)[0]
 
+    def list(self, status):
+        myStatus = None
+
+        try:
+            myStatus = self.Status(status.upper()).value if len(status) > 0 else None
+        except:
+            print("Status <{}> is not a option".format(status))
+            return
+
+        return self.storage.list_tasks(myStatus)
+
     def resume(self):
         pass
 
@@ -52,4 +76,9 @@ class TaskApplication:
         ## if tag does not exist, create
         pass
 
+    def _get_running_task(self):
+        running_task = self.storage.list_tasks(status=self.Status.running.value)
+        return running_task[0] if len(running_task) > 0 else None
+
+        
 

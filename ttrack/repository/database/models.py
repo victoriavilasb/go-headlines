@@ -33,6 +33,13 @@ class Project(Base):
     def get_id(self):
         return self.id
 
+    def as_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "status": self.status.value
+        }
+
 class Task(Base):
     __tablename__ = "tasks"
 
@@ -52,6 +59,16 @@ class Task(Base):
             self.update_at
         )
 
+    def as_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "project_id": self.project_id or "-",
+            "status": self.status.value,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at
+        }
+
 class Interruption(Base):
     __tablename__ = "interruptions"
 
@@ -68,6 +85,14 @@ class Interruption(Base):
             self.update_at
         )
 
+    def as_dict(self):
+        return {
+            "interruptor_id": self.interruptor_id,
+            "interrupted_at": self.interrupted_at,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at
+        }
+
 class Tag(Base):
     __tablename__ = "tags"
 
@@ -78,6 +103,12 @@ class Tag(Base):
         return "<Tag(name='%s')>" % (
             self.name
         )
+
+    def as_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+        }
 
 class TaskTag(Base):
     __tablename__ = "task_tags"
