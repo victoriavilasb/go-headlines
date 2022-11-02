@@ -1,8 +1,7 @@
 from enum import Enum
 
 from datetime import datetime
-from ttrack.repository.database.command import Command
-from ttrack.repository.database.query import Query
+from ttrack.repository.storage import Storage
 
 class TaskApplication:
     class Status(Enum):
@@ -10,9 +9,8 @@ class TaskApplication:
         paused = 'PAUSED'
         finished = 'FINISHED'
 
-    def __init__(self, command: Command, query: Query):
-        self.command = command
-        self.query = query
+    def __init__(self, storage: Storage):
+        self.storage = storage
 
 
     def start(self, name: str, project_name: str, force: bool):
@@ -46,7 +44,7 @@ class TaskApplication:
          return task["status"] if "status" in task else None
         
     def get_task_duration_in_hours(self, name):
-        task = self.query.find_task(name)
+        task = self.storage.find_task(name)
         duration = 0
 
         if task.status == self.Status.finished.value:

@@ -1,15 +1,5 @@
 # Here we will have methods that modify the database 
 
-<<<<<<< Updated upstream:ttrack/repository/database/command.py
-from ttrack.repository.database.models import Project, ProjectStatus, Task, Tag, TaskStatus, TaskTag
-from ttrack.repository.command import BaseCommand
-from ttrack.repository.database.query import Query
-
-class Command(BaseCommand):
-    def __init__(self, session):
-        self.session = session
-        self.query = Query(session)
-=======
 from ttrack.repository.models import Project, ProjectStatus, Task, Tag, TaskStatus, TaskTag
 from ttrack.repository.storage import Storage
 from sqlalchemy import create_engine, update, Enum
@@ -23,7 +13,6 @@ class Database(Storage):
         Session.configure(bind=create_engine(db_string))
 
         self.session = Session()
->>>>>>> Stashed changes:ttrack/repository/database.py
 
     def create_project(self, name):
         p = Project(name=name)
@@ -31,22 +20,11 @@ class Database(Storage):
         self.session.commit()
 
     def create_task(self, name, project_name = None) -> Task:
-<<<<<<< Updated upstream:ttrack/repository/database/command.py
-        project = self._get_project_by_name(project_name)
-        project_id = None
-
-        if project != None:
-            project_id = project.id
-
-        t = Task(name=name, project_id=project_id)
-        self.session.add(t)
-=======
         project = self.find_project(project_name)
 
         task = Task(name=name, project_id=project["id"] if "id" in project else None)
         
         self.session.add(task)
->>>>>>> Stashed changes:ttrack/repository/database.py
         self.session.commit()
 
         return task.as_dict()
@@ -92,15 +70,6 @@ class Database(Storage):
         self.session.delete(TaskTag).where(task_id=task.id, tag_id=tag.id)
         self.session.commit()
 
-<<<<<<< Updated upstream:ttrack/repository/database/command.py
-    def _get_project_by_name(self, project_name):
-        return self.session.query(Project).filter(Project.name == project_name).one()
-
-    def _get_task_by_name(self, task_name):
-        return self.session.query(Task).filter(Project.name == task_name).one()
-
-
-=======
     def list_projects(self, status = None):
         s = self.session.query(Project)
         if status != None:
@@ -138,4 +107,3 @@ class Database(Storage):
         db_string = uri
         s = sessionmaker().configure(bind=create_engine(db_string))
         return s()
->>>>>>> Stashed changes:ttrack/repository/database.py
