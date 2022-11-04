@@ -8,14 +8,23 @@
 <p> <h2> Engenharia de Software II </h2> </p>
 
   
-| [About](#TTrack) | [Commands and descriptions](#Commands-and-descriptions) | [Database Relationship Model](#Database-Relationship-Model)| [Members](#Members) | [Technologies](#Technologies)|
+| [About](#TTrack) | [Set up environment](#Set-up-environment) | [Commands and descriptions](#Commands-and-descriptions) | [Database Relationship Model](#Database-Relationship-Model)| [Members](#Members) | [Technologies](#Technologies)|
 | - | - | - | - | - |
-  
+
 </div>
 
 
 # TTrack
 ttrack is an application built in python to track work.
+
+### Set up environment
+It is mandatory having docker installed in order to build the project
+
+```cli
+ docker-compose up -d db
+ python -m pip install -r requirements.txt
+ alembic upgrade head
+```
 
 ### Commands and descriptions
 
