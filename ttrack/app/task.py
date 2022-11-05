@@ -104,10 +104,6 @@ class TaskApplication:
 
         self.storage.update_task_status(self.name, self.Status.running.value)
 
-    def tag(self, tag_name: str):
-        ## if tag does not exist, create
-        pass
-
     def _get_running_task(self):
         running_task = self.storage.list_tasks(status=self.Status.running.value)
         return running_task[0] if len(running_task) > 0 else None
