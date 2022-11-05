@@ -15,9 +15,7 @@ class TaskApplication:
         self.project_name = project_name
 
     def start(self, force: bool):
-        if self.project_name and self.storage.find_project(self.project_name) == None:
-            print("ERROR: this project does not exist. You should choose an existent project.")
-            print("run ttrack list --project to see all projects available")
+        if self._check_if_given_project_does_not_exist():
             return
             
         running_task = self._get_running_task()
@@ -112,5 +110,11 @@ class TaskApplication:
         running_task = self.storage.list_tasks(status=self.Status.running.value)
         return running_task[0] if len(running_task) > 0 else None
 
+    def _check_if_given_project_does_not_exist(self):
+        if self.project_name and len(self.storage.find_project(self.project_name)) == 0:
+            print("ERROR: this project does not exist. You should choose an existent project.")
+            print("run ttrack list --project to see all projects available")
+            return True
+        return False
         
 
