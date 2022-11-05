@@ -15,21 +15,9 @@ class TaskApplication:
         self.project_name = project_name
 
     def start(self, force: bool):
-        if self.project_name and self.storage.find_project(self.project_name) == None:
-            print("ERROR: this project does not exist. You should choose an existent project.")
-            print("run ttrack list --project to see all projects available")
-            return
+        self._check_if_given_project_does_not_exist()
             
-        running_task = self._get_running_task()
-        if running_task:
-            if force:
-                self.storage.update_task_status(
-                    running_task["name"],
-                    self.Status.paused.value
-                )
-            else:
-                print("ERROR: {} is running. You should finish or pause this task before starting another.".format(running_task["name"]))
-                return
+        self._pause_running_tasks_if_forced(force)
         
         self.storage.create_task(self.name, self.project_name)
 
@@ -112,5 +100,22 @@ class TaskApplication:
         running_task = self.storage.list_tasks(status=self.Status.running.value)
         return running_task[0] if len(running_task) > 0 else None
 
+    def _check_if_given_project_does_not_exist(self):
+        if self.project_name and len(self.storage.find_project(self.project_name)) == 0:
+            print("ERROR: this project does not exist. You should choose an existent project.")
+            print("run ttrack list --project to see all projects available")
+            quit()
         
+    def _pause_running_tasks_if_forced(self, force: bool):
+        running_task = self._get_running_task()
+        if len(running_task) == 0:
+            return
+        elif force:
+            self.storage.update_task_status(
+                    running_task["name"],
+                    self.Status.paused.value
+                )
+        else:
+            print("ERROR: {} is running. You should finish or pause this task before starting another.".format(running_task["name"]))
+            quit()
 
