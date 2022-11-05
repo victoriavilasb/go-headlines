@@ -1,7 +1,6 @@
 from enum import Enum
 from typing import Optional
 import typer
-import yaml
 
 import os
 from os import environ
@@ -10,6 +9,7 @@ from pathlib import Path
 from ttrack import __app_name__, __version__
 from ttrack.app.project import ProjectApplication
 from ttrack.app.task import TaskApplication
+from ttrack.app.config import Configuration
 from ttrack.repository.storage import StorageType
 from ttrack.repository.database import Database
 
@@ -34,16 +34,7 @@ def config(
     '''
     Prepare environment for ttrack
     '''
-    config = {
-        'storage_type': storage,
-        'connection': mount_connection_data(storage, uri, path)
-    }
-
-    if not os.path.exists(os.path.dirname(CONFIG_PATH)):
-        os.makedirs(os.path.dirname(CONFIG_PATH))
-        
-    with open(CONFIG_PATH, 'w') as yaml_file:
-        yaml.dump(config, yaml_file, default_flow_style=False)
+    Configuration(CONFIG_PATH).create_or_update(uri, path, storage)
 
 @start_app.command('task')
 def start_task(
@@ -179,7 +170,6 @@ def list(
 ):
     if projects and tasks:
         print("ERROR: choose only one resource to list")
-        return
     elif projects:
         print_projects(_project_application().list(status))
     elif tasks:
@@ -223,25 +213,13 @@ def mount_connection_data(storage, uri, path):
 
     return connection
 
-def storage_from_configuration():
-    config = {}
-    with open(CONFIG_PATH) as f:
-        config = yaml.safe_load(f)
-
-        storage_type = config["storage_type"]
-        connection = config["connection"]
-
-        s = StorageType(storage_type)
-        if s == StorageType.DATABASE:
-            return Database(connection)
-        else:
-            raise NotImplementedError("Storage were not implemented")
-
 def _task_application(name = None, project_name = None):
-    return TaskApplication(storage_from_configuration(), name, project_name)
+    config = Configuration(CONFIG_PATH)
+    return TaskApplication(config.instance_database(), name, project_name)
 
-def _project_application(name = None):
-    return ProjectApplication(storage_from_configuration(), name)
+def _project_application():
+    config = Configuration(CONFIG_PATH)
+    return ProjectApplication(config.instance_database())
 
 def print_projects(resources):
     table = [["NAME", "STATUS"]]
