@@ -55,7 +55,7 @@ def start_task(
     Start a new task (unique name is expected as arg)
     As humans beings are not multithreaded, ttrack records just one task at a time
     """
-    task_application().start(name, project, force)
+    _task_application(name, project).start(force)
 
 @edit_app.command('task')
 def edit_task(
@@ -78,14 +78,14 @@ def tag(
     tag: str = typer.Option(..., "--tag", help="tag name"),
     task: str = typer.Option(..., "--task", help="task name"),
 ):
-    task_application().add_tag_to_task(tag, task)
+    _task_application(task).add_tag_to_task(tag)
 
 @ttrack.command("remove-tag")
 def tag(
     tag: str = typer.Option(..., "--tag", help="tag name"),
     task: str = typer.Option(..., "--task", help="task name"),
 ):
-    task_application().remove_tag_from_task(tag, task)
+    _task_application(task).remove_tag_from_task(tag)
 
 @ttrack.command('finish')
 def finish(
@@ -100,7 +100,7 @@ def finish(
         tasks.append(task)
 
     for task_name in tasks:
-        task_application().finish(task_name)
+        _task_application(task_name).finish()
 
 @ttrack.command('continue')
 def finish(
@@ -109,7 +109,7 @@ def finish(
     """
     Resume a task
     """
-    task_application().resume(task)
+    _task_application().resume(task)
 
 @ttrack.command('archive')
 def archive(
@@ -150,7 +150,7 @@ def pause(
     Pause a given task
     """
 
-    task_application().pause(task)
+    _task_application(task).pause()
 
 @ttrack.command("resume")
 def resume(
@@ -160,7 +160,7 @@ def resume(
     Pause a given task
     """
 
-    task_application().resume(task)
+    _task_application(task).resume()
 
 @start_app.command('project')
 def project(
@@ -183,7 +183,7 @@ def list(
     elif projects:
         print_projects(project_application().list(status))
     elif tasks:
-        print_tasks(task_application().list(status))
+        print_tasks(_task_application().list(status))
     else:
         print("ERROR: please choose a resource to list (projects or tasks")
 
@@ -237,8 +237,8 @@ def storage_from_configuration():
         else:
             raise NotImplementedError("Storage were not implemented")
 
-def task_application():
-    return TaskApplication(storage_from_configuration())
+def _task_application(name = None, project_name = None):
+    return TaskApplication(storage_from_configuration(), name, project_name)
 
 def project_application():
     return ProjectApplication(storage_from_configuration())
