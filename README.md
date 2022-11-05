@@ -21,9 +21,33 @@ ttrack is an application built in python to track work.
 It is mandatory having docker installed in order to build the project
 
 ```cli
- docker-compose up -d db
- python -m pip install -r requirements.txt
- alembic upgrade head
+sudo apt install docker.io docker-compose
+sudo apt install python3.8-venv
+```
+Clone this repository
+```cli
+git clone https://github.com/victoriavilasb/ttrack.git
+```
+Create and activate virtual environment
+```cli
+python3 -m venv ./venv
+source venv/bin/activate
+```
+Install dependencies
+```cli
+python3 -m pip install -r requirements.txt
+```
+Build docker
+```cli
+docker-compose up -d db
+```
+Run migrations
+```cli
+alembic upgrade head
+```
+Run program 
+```cli
+python -m ttrack --help
 ```
 
 ### Commands and descriptions
