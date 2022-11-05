@@ -9,7 +9,6 @@
 
   
 | [About](#TTrack) | [Set up environment](#Set-up-environment) | [Commands and descriptions](#Commands-and-descriptions) | [Database Relationship Model](#Database-Relationship-Model)| [Members](#Members) | [Technologies](#Technologies)|
-| - | - | - | - | - |
 
 </div>
 
@@ -52,17 +51,19 @@ python -m ttrack --help
 
 ### Commands and descriptions
 
-| command     | description                                                       | default |
-|-------------|-------------------------------------------------------------------|---------|
-| version     | prints the current version of the project                         | -       |
-| help        | shows the global help message for the entire application          | -       |
-| start       | starts a new task. -i option creates an interruption              |         |
-| finish      | finishes a task. default is the running task. -t specifies a task |         |
-| report      | TODO                                                              |         |
-
-### Database Relationship Model
-
-<img width="446" alt="Captura de Tela 2022-10-15 às 22 15 00" src="https://user-images.githubusercontent.com/19718423/196013324-da075e7a-28bb-419f-8214-5706ada445d7.png">
+Commands:
+  activate    Activate projects
+  add-tag     Add a tag to a project
+  archive     Archive projects
+  config      Prepare environment for ttrack
+  continue    Resume a task
+  edit        Adds or remove a project from a task 
+  finish      Finishs a task or a project
+  list        List project or task (check out parameters)
+  pause       Pause a given task
+  remove-tag  Remove tag from a task
+  resume      Pause a given task
+  start       Start a project or a task
 
 
 ### Members
@@ -72,9 +73,11 @@ python -m ttrack --help
 - Victoria Olivia Araujo Vilas Boas
 - Vinicius Rodrigues Oliveira
 
-
 ### Technologies
 
-- Python is the software development technology used in this project
-- PostgreSQL is the database system used in this project
-- Docker is used in this project to run the database in a container
+- Python: Python was chosen because of it simplicity, and because all members from the group knows the technology
+- PostgreSQL: Is a powerful system chosen as storage
+- Docker: Database run as a container, and docker was chosen in order to build and run the database container
+- Typer: is a python library to build powerful CLI applications
+- SQLAlchemy: as the orm to query and persist data
+- Alembic: to manage database migrations
