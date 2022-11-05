@@ -179,7 +179,6 @@ def list(
 ):
     if projects and tasks:
         print("ERROR: choose only one resource to list")
-        return
     elif projects:
         print_projects(project_application().list(status))
     elif tasks:
