@@ -8,7 +8,7 @@
 <p> <h2> Engenharia de Software II </h2> </p>
 
   
-| [About](#TTrack) | [Set up environment](#Set-up-environment) | [Commands and descriptions](#Commands-and-descriptions) | [Database Relationship Model](#Database-Relationship-Model)| [Members](#Members) | [Technologies](#Technologies)|
+| [About](#TTrack) | [Set up environment](#Set-up-environment) | [Commands and descriptions](#Commands-and-descriptions) | [Members](#Members) | [Technologies](#Technologies) |
 
 </div>
 
