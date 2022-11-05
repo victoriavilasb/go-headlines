@@ -8,7 +8,7 @@
 <p> <h2> Engenharia de Software II </h2> </p>
 
   
-| [About](#TTrack) | [Set up environment](#Set-up-environment) | [Commands and descriptions](#Commands-and-descriptions) | [Database Relationship Model](#Database-Relationship-Model)| [Members](#Members) | [Technologies](#Technologies)|
+| [About](#TTrack) | [Set up environment](#Set-up-environment) | [Commands and descriptions](#Commands-and-descriptions) | [Members](#Members) | [Technologies](#Technologies) |
 
 </div>
 
@@ -52,19 +52,52 @@ python -m ttrack --help
 ### Commands and descriptions
 
 Commands:
-  activate    Activate projects
-  add-tag     Add a tag to a project
-  archive     Archive projects
-  config      Prepare environment for ttrack
-  continue    Resume a task
-  edit        Adds or remove a project from a task 
-  finish      Finishs a task or a project
-  list        List project or task (check out parameters)
-  pause       Pause a given task
-  remove-tag  Remove tag from a task
-  resume      Pause a given task
-  start       Start a project or a task
 
+  - config: prepare environment for ttrack
+  - start a task:
+    ```cli
+    start task <task_name> --project <task_project> --force <force>
+    ```
+  - start a project:
+    ```cli
+    start project <project_name>
+    ```
+  - add or remove a project from a task: 
+    ```cli
+    edit task <task_name> --add-project <task_project> --remove-project <remove>
+    ```
+  - add a tag to a task:
+    ```cli
+    add-tag --tag <tag_name> --task <task_name>
+    ```
+  - remove a tag from a task: 
+    ```cli
+    remove-tag --tag <tag_name> --task <task_name>
+    ```
+  - resume a task:
+    ```cli
+    continue --task <task_name>
+    ```
+  - pause a task:
+    ```cli
+    pause --task <task_name>
+    ```
+  - finish one or more tasks: 
+    ```cli
+    finish --task <task_name> --tasks <task_name_0,task_name_1,...>
+    ```
+  - activate one or more tasks:
+    ```cli
+    activate --project <project_name> --projects <project_name_0,project_name_1,...>
+    ```
+  - archive one or more projects:
+    ```cli
+    archive --project <project_name> --projects <project_name_0,project_name_1,...>
+    ```
+  - list tasks or projects:
+    ```cli
+    list --projects <show_projects> --tasks <show_tasks> --status <status_to_be_shown>
+    ```
 
 ### Members
 
