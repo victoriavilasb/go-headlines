@@ -68,9 +68,9 @@ def edit_task(
     As humans beings are not multithreaded, ttrack records just one task at a time
     """
     if len(project):
-        project_application().add_project_to_task(project, name)
+        _project_application(name).add_project_to_task(name)
     if remove:
-        project_application().remove_project_from_task(name)
+        _project_application().remove_project_from_task(name)
         
 
 @ttrack.command("add-tag")
@@ -124,7 +124,7 @@ def archive(
         projects.append(project)
 
     for project_name in projects:
-        project_application().archive(project_name)
+        _project_application(project_name).archive()
 
 @ttrack.command('activate')
 def activate(
@@ -139,7 +139,7 @@ def activate(
         projects.append(project)
 
     for project_name in projects:
-        project_application().activate(project_name)
+        _project_application(project_name).activate()
 
 
 @ttrack.command("pause")
@@ -169,7 +169,7 @@ def project(
     """
     Start a new project (unique name is expected as arg)
     """
-    project_application().start(name)
+    _project_application(name).start()
 
 @ttrack.command("list")
 def list(
@@ -181,7 +181,7 @@ def list(
         print("ERROR: choose only one resource to list")
         return
     elif projects:
-        print_projects(project_application().list(status))
+        print_projects(_project_application().list(status))
     elif tasks:
         print_tasks(_task_application().list(status))
     else:
@@ -240,8 +240,8 @@ def storage_from_configuration():
 def _task_application(name = None, project_name = None):
     return TaskApplication(storage_from_configuration(), name, project_name)
 
-def project_application():
-    return ProjectApplication(storage_from_configuration())
+def _project_application(name = None):
+    return ProjectApplication(storage_from_configuration(), name)
 
 def print_projects(resources):
     table = [["NAME", "STATUS"]]

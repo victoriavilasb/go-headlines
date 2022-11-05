@@ -7,17 +7,18 @@ class ProjectApplication:
         active = 'ACTIVE'
         archived = 'ARCHIVED'
 
-    def __init__(self, storage: Storage):
+    def __init__(self, storage: Storage, name = None):
         self.storage = storage
+        self.name = name
 
-    def start(self, name: str):
-        return self.storage.create_project(name)
+    def start(self):
+        return self.storage.create_project(self.name)
 
-    def archive(self, name):
-        return self.storage.update_project_status(name, ProjectStatus.archived)
+    def archive(self):
+        return self.storage.update_project_status(self.name, ProjectStatus.archived)
 
-    def activate(self, name):
-        return self.storage.update_project_status(name, ProjectStatus.active)
+    def activate(self):
+        return self.storage.update_project_status(self.name, ProjectStatus.active)
 
     def list(self, status):
         app_status = None
@@ -30,8 +31,8 @@ class ProjectApplication:
             
         return self.storage.list_projects(app_status)
 
-    def add_project_to_task(self, project_name: str, task_name: str):
-        project = self.storage.find_project(project_name)
+    def add_project_to_task(self, task_name: str):
+        project = self.storage.find_project(self.project_name)
         task = self.storage.find_task(task_name)
 
 
