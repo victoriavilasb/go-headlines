@@ -52,18 +52,19 @@ python -m ttrack --help
 ### Commands and descriptions
 
 Commands:
-  activate    Activate projects
-  add-tag     Add a tag to a project
-  archive     Archive projects
-  config      Prepare environment for ttrack
-  continue    Resume a task
-  edit        Adds or remove a project from a task 
-  finish      Finishs a task or a project
-  list        List project or task (check out parameters)
-  pause       Pause a given task
-  remove-tag  Remove tag from a task
-  resume      Pause a given task
-  start       Start a project or a task
+
+  - activate:   Activate projects
+  - add-tag:     Add a tag to a project
+  - archive:     Archive projects
+  - config:      Prepare environment for ttrack
+  - continue:    Resume a task
+  - edit:        Adds or remove a project from a task 
+  - finish:      Finishs a task or a project
+  - list:        List project or task (check out parameters)
+  - pause:       Pause a given task
+  - remove-tag:  Remove tag from a task
+  - resume:      Pause a given task
+  - start:       Start a project or a task
 
 
 ### Members
