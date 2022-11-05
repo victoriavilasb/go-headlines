@@ -17,7 +17,7 @@ class TaskApplication:
     def start(self, force: bool):
         self._check_if_given_project_does_not_exist()
             
-        self. _pause_running_tasks_if_forced(force)
+        self._pause_running_tasks_if_forced(force)
         
         self.storage.create_task(self.name, self.project_name)
 
