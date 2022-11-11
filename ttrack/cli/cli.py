@@ -11,7 +11,8 @@ from ttrack.app.project import ProjectApplication
 from ttrack.app.task import TaskApplication
 from ttrack.app.config import Configuration
 from ttrack.repository.storage import StorageType
-from ttrack.repository.database import Database
+from ttrack.repository.yaml import Yaml
+
 
 # Main command
 ttrack = typer.Typer()
@@ -34,7 +35,8 @@ def config(
     '''
     Prepare environment for ttrack
     '''
-    Configuration(CONFIG_PATH).create_or_update(uri, path, storage)
+
+    Configuration(CONFIG_PATH, Yaml()).create_or_update(uri, path, storage)
 
 @start_app.command('task')
 def start_task(
