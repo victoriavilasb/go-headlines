@@ -1,18 +1,15 @@
-import yaml
-import os
-
 from ttrack.repository.database import Database
 from ttrack.repository.storage import StorageType
 from ttrack.repository.yaml import Yaml
 
 class Configuration:
-    def __init__(self, file_path, yaml: Yaml):
+    def __init__(self, file_path, repo: Yaml):
         self.file_path = file_path
-        self.yaml = yaml
+        self.repo = repo
         
         config = {}
-        if self.yaml.file_exists(file_path):
-            config = self.yaml.read_file(file_path)
+        if self.repo.file_exists(file_path):
+            config = self.repo.read_file(file_path)
 
         self.storage_type = StorageType(config["storage_type"]) if "storage_type" in config else None
         self.connection = config["connection"] if "connection" in config else None
@@ -26,7 +23,7 @@ class Configuration:
             'connection': self._mount_connection_data(uri, path, storage)
         }
 
-        self.yaml.write_file(self.file_path, config)
+        self.repo.write_file(self.file_path, config)
 
     def _mount_connection_data(self, uri, path, storage):
         connection = {}
