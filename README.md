@@ -56,47 +56,59 @@ Commands:
   - config: prepare environment for ttrack
   - start a task:
     ```cli
-    start task <task_name> --project <task_project> --force <force>
+    python -m ttrack start task <task_name> --project <task_project> --force <force>
     ```
   - start a project:
     ```cli
-    start project <project_name>
+    python -m ttrack start project <project_name>
     ```
   - add or remove a project from a task: 
     ```cli
-    edit task <task_name> --add-project <task_project> --remove-project <remove>
+    python -m ttrack edit task <task_name> --add-project <task_project> --remove-project <remove>
     ```
   - add a tag to a task:
     ```cli
-    add-tag --tag <tag_name> --task <task_name>
+    python -m ttrack add-tag --tag <tag_name> --task <task_name>
     ```
   - remove a tag from a task: 
     ```cli
-    remove-tag --tag <tag_name> --task <task_name>
+    python -m ttrack remove-tag --tag <tag_name> --task <task_name>
     ```
   - resume a task:
     ```cli
-    continue --task <task_name>
+    python -m ttrack continue --task <task_name>
     ```
   - pause a task:
     ```cli
-    pause --task <task_name>
+    python -m ttrack pause --task <task_name>
     ```
   - finish one or more tasks: 
     ```cli
-    finish --task <task_name> --tasks <task_name_0,task_name_1,...>
+    python -m ttrack finish --task <task_name> --tasks <task_name_0,task_name_1,...>
     ```
   - activate one or more tasks:
     ```cli
-    activate --project <project_name> --projects <project_name_0,project_name_1,...>
+    python -m ttrack activate --project <project_name> --projects <project_name_0,project_name_1,...>
     ```
   - archive one or more projects:
     ```cli
-    archive --project <project_name> --projects <project_name_0,project_name_1,...>
+    python -m ttrack archive --project <project_name> --projects <project_name_0,project_name_1,...>
     ```
   - list tasks or projects:
     ```cli
-    list --projects <show_projects> --tasks <show_tasks> --status <status_to_be_shown>
+    python -m ttrack list --projects <show_projects> --tasks <show_tasks> --status <status_to_be_shown>
+    ```
+  - create a shortcut:
+    ```cli
+    python -m ttrack create shortcut <shortcut_name> --programs <list of programs> --web-pages <list of web pages>
+    ```
+  - open a shortcut:
+    ```cli
+    python -m ttrack open shortcut <shortcut_name>
+    ```
+  - edit a shortcut:
+    ```cli
+    python -m ttrack edit shortcut <shortcut_name>
     ```
 
 ### Members
