@@ -2,13 +2,16 @@ import subprocess
 import shutil
 import webbrowser
 
+from os import environ
 from ttrack.repository.yaml import Yaml
+
+SC_PATH = "{}/.ttrack/shortcuts".format(environ['HOME'])
 
 class Shortcut:
     
-    def __init__(self, name: str, path, repo: Yaml):
+    def __init__(self, name: str, repo: Yaml):
         self.name = name
-        self.path = path
+        self.path = self._mount_shortcut_path()
         self.repo = repo
 
     def create(self, pages, programs):
@@ -29,8 +32,11 @@ class Shortcut:
     def open(self):
         shortcut = self.repo.read_file(self.path)
 
-        self.open_programs(shortcut["programs"])
-        self.open_web_pages(shortcut["pages"])
+        self._open_programs(shortcut["programs"])
+        self._open_web_pages(shortcut["pages"])
+
+    def edit(self):
+        subprocess.call(["vim", self._mount_shortcut_path()])
 
 
     def _find_program_path(self, name):
@@ -40,12 +46,14 @@ class Shortcut:
 
         return path
 
-    def open_web_pages(self, pages): 
-        # i`m using brave and it isnt working, test with chrome
+    def _open_web_pages(self, pages): 
         for page in pages:
             webbrowser.open(page, new=0, autoraise=True) 
 
 
-    def open_programs(self, programs):
+    def _open_programs(self, programs):
         to_open = [program["path"] for program in programs if len(program["path"]) > 0]
-        subprocess.call([to_open])
+        subprocess.call(to_open)
+
+    def _mount_shortcut_path(self):
+        return SC_PATH+"/{}.yaml".format(self.name)
