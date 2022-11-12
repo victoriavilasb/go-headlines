@@ -1,18 +1,16 @@
-from enum import Enum
 from typing import Optional
 import typer
 
-import os
 from os import environ
-from pathlib import Path
 
 from ttrack import __app_name__, __version__
+
 from ttrack.app.project import ProjectApplication
 from ttrack.app.task import TaskApplication
-from ttrack.app.config import Configuration
-from ttrack.repository.storage import StorageType
-from ttrack.repository.yaml import Yaml
+from ttrack.app.shortcut import Shortcut
 
+from ttrack.app.config import Configuration
+from ttrack.repository.yaml import Yaml
 
 # Main command
 ttrack = typer.Typer()
@@ -20,9 +18,13 @@ ttrack = typer.Typer()
 # Sub commands
 start_app = typer.Typer()
 edit_app = typer.Typer()
+open_app = typer.Typer()
+create_app = typer.Typer()
 
 ttrack.add_typer(start_app, name = "start")
 ttrack.add_typer(edit_app, name = "edit")
+ttrack.add_typer(open_app, name = "open")
+ttrack.add_typer(create_app, name= "create")
 
 CONFIG_PATH = "{}/.ttrack/config.yaml".format(environ['HOME'])
 
@@ -37,6 +39,27 @@ def config(
     '''
 
     Configuration(CONFIG_PATH, Yaml()).create_or_update(uri, path, storage)
+
+@open_app.command("shortcut")
+def open_shortcut(
+    name: str,
+):
+    Shortcut(name, Yaml()).open()
+    
+@create_app.command("shortcut")
+def create_shortcut(
+    name: str,
+    web_pages: str = typer.Option("", "--web-pages", help="webpages separated by comma"),
+    programs: str = typer.Option("", "--programs", help="programs name separated by comma")
+):
+    Shortcut(name, Yaml()).create(web_pages, programs)
+    
+
+@edit_app.command('shortcut')
+def edit_shortcut(
+    name: str
+):
+    Shortcut(name, Yaml()).edit()
 
 @start_app.command('task')
 def start_task(
@@ -196,24 +219,6 @@ def main(
     )
 ) -> None:
     return
-
-def mount_connection_data(storage, uri, path):
-    connection = {}
-    s = StorageType(storage)
-    if s == StorageType.DATABASE:
-        connection = {
-            'uri': uri
-        }
-    elif s == StorageType.LOCAL:
-        connection = {
-            'path': path
-        }
-    elif s == StorageType.BLOB:
-        connection = {}
-    else:
-        raise Exception("Storage is not an option")
-
-    return connection
 
 def _task_application(name = None, project_name = None):
     config = Configuration(CONFIG_PATH)
