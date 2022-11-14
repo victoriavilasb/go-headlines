@@ -25,28 +25,12 @@ class TaskApplication:
         self.storage.update_task_status(self.name, self.Status.finished.value)
 
     def pause(self):
-        status = self.get_task_status(self.name)
+        status = self._get_task_status()
         if status and status == self.Status.finished.value:
             print("ERROR: {} already finished".format(self.name))
+            quit()
             
         self.storage.update_task_status(self.name, self.Status.paused.value)
-
-    def get_task_status(self):
-         task = self.storage.find_task(self.name)
-         return task["status"] if "status" in task else None
-        
-    def get_task_duration_in_hours(self):
-        task = self.storage.find_task(self.name)
-        duration = 0
-
-        if task.status == self.Status.finished.value:
-            duration = datetime(task.update_at) - datetime(task.created_at)
-        else:
-            duration = datetime.now - task.created_at
-
-        duration_in_seconds = duration.total_seconds()
-
-        return divmod(duration_in_seconds, 3600)[0]
 
     def list(self, status):
         my_status = None
@@ -67,7 +51,7 @@ class TaskApplication:
             tag = self.storage.create_tag(tag_name)
         if len(task) == 0:
             print("ERROR: task does not exist")
-            return
+            quit()
 
         task = self.storage.add_tag_to_task(tag, task)
 
@@ -88,7 +72,7 @@ class TaskApplication:
         running_task = self._get_running_task()
         if running_task:
             print("ERROR: {} is running. You should finish or pause this task before continuing another.".format(running_task["name"]))
-            return
+            quit()
 
         self.storage.update_task_status(self.name, self.Status.running.value)
 
@@ -115,3 +99,19 @@ class TaskApplication:
             print("ERROR: {} is running. You should finish or pause this task before starting another.".format(running_task["name"]))
             quit()
 
+    def _get_task_status(self):
+         task = self.storage.find_task(self.name)
+         return task["status"] if "status" in task else None
+        
+    def _get_task_duration_in_hours(self):
+        task = self.storage.find_task(self.name)
+        duration = 0
+
+        if task.status == self.Status.finished.value:
+            duration = datetime(task.update_at) - datetime(task.created_at)
+        else:
+            duration = datetime.now - task.created_at
+
+        duration_in_seconds = duration.total_seconds()
+
+        return divmod(duration_in_seconds, 3600)[0]
