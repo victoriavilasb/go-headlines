@@ -118,6 +118,3 @@ def config_environment():
         "--uri",
         "postgresql://postgres:postgres@0.0.0.0:5432/ttrack"
     ])
-
-    # run database migrations
-    subprocess.run(["alembic", "upgrade", "head"])
