@@ -1,7 +1,7 @@
 colorama==0.4.4
 shellingham==1.4.0
 SQLAlchemy
-alembic==1.8.1
+alembic
 typer
 psycopg2-binary
 pyyaml

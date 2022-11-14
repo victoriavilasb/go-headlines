@@ -47,8 +47,7 @@ jobs:
 
     - name: Start containers 
       run: |
-        docker-compose -f "docker-compose.yaml" up -d db &
-        docker ps
+        docker-compose -f "docker-compose.yaml" up db
 
   test_on_windows:
     name: Test on Windows
