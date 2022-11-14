@@ -25,6 +25,14 @@ jobs:
       run: |
         python -m unittest discover -s tests/app
 
+    - name: Start containers
+      run: |
+        docker-compose -f "docker-compose.yaml" up -d db
+
+    - name: Unit test
+      run: |
+        python -m unittest discover -s tests/test_e2e.py
+
   test_on_linux:
     name: Test on Linux 
     runs-on: ubuntu-latest
@@ -65,15 +73,5 @@ jobs:
       run: |
         python -m unittest discover -s tests/app
 
-  e2e_tests:
-    name: Run e2e tests
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-
-    - name: Start containers
-      run: |
-        docker-compose -f "docker-compose.yaml" up -d db
+    
 
