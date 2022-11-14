@@ -221,12 +221,12 @@ def main(
     return
 
 def _task_application(name = None, project_name = None):
-    config = Configuration(CONFIG_PATH)
+    config = Configuration(CONFIG_PATH, Yaml())
     return TaskApplication(config.instance_database(), name, project_name)
 
-def _project_application():
-    config = Configuration(CONFIG_PATH)
-    return ProjectApplication(config.instance_database())
+def _project_application(name = None):
+    config = Configuration(CONFIG_PATH, Yaml())
+    return ProjectApplication(config.instance_database(), name)
 
 def print_projects(resources):
     table = [["NAME", "STATUS"]]
