@@ -92,7 +92,7 @@ class TestTtrackE2E(unittest.TestCase):
             "--tasks"
         ],  capture_output=True)
 
-        out = subprocess.run(["grep", self.name], input=ps.stdout, capture_output=True)
+        out = subprocess.run(["grep", self.task_name], input=ps.stdout, capture_output=True)
 
         return str(out.stdout.decode('utf-8').strip())
 
