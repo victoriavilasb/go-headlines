@@ -23,7 +23,7 @@ jobs:
 
     - name: Unit test
       run: |
-        python -m unittest discover -s tests/app
+        python3  -m unittest discover -s tests/app
 
   test_on_linux:
     name: Test on Linux 
@@ -43,11 +43,15 @@ jobs:
 
     - name: Unit test
       run: |
-        python -m unittest discover -s tests/app
+        python3 -m unittest discover -s tests/app
 
     - name: Start containers 
-      run: |
-        docker-compose -f "docker-compose.yaml" up db
+      uses: isbang/compose-action@v1.4.0
+      with:
+        compose-file: "docker-compose.yaml"
+        down-flags: "--volumes"
+        services: |
+          db
 
   test_on_windows:
     name: Test on Windows
