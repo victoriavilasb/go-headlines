@@ -104,7 +104,7 @@ class TaskApplication:
         
     def _pause_running_tasks_if_forced(self, force: bool):
         running_task = self._get_running_task()
-        if len(running_task) == 0:
+        if running_task == None:
             return
         elif force:
             self.storage.update_task_status(
