@@ -26,5 +26,3 @@ class TestProject(unittest.TestCase):
 
         update_project_status.assert_called_with(self.project_name, 'ARCHIVED')
 
-
-        
