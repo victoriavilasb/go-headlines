@@ -53,13 +53,11 @@ jobs:
       run: |
         python -m unittest discover -s tests/app
 
-    - name: Start containers
+    - name: Start containers and run e2e tests
       run: |
-        docker-compose -f "docker-compose.yaml" up -d db
-
-    - name: e2e test
-      run: |
+        docker-compose -f "docker-compose.yaml" up -d db & 
         python -m unittest tests/test_e2e.py
+
 
   test_on_windows:
     name: Test on Windows
