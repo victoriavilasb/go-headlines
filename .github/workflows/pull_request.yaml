@@ -18,8 +18,8 @@ jobs:
 
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip 
-        python -m pip install -r requirements.txt
+        python3 -m pip install --upgrade pip 
+        python3 -m pip install -r requirements.txt
 
     - name: Unit test
       run: |
@@ -38,8 +38,8 @@ jobs:
 
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip 
-        python -m pip install -r requirements.txt
+        python3 -m pip install --upgrade pip 
+        python3 -m pip install -r requirements.txt
 
     - name: Unit test
       run: |
@@ -53,9 +53,9 @@ jobs:
         services: |
           db
 
-    - name: CHECK CONTAINERS
+    - name: e2e tests
       run: |
-        docker ps
+        python3 -m unittest tests/test_e2e.py
 
   test_on_windows:
     name: Test on Windows
