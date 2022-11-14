@@ -29,6 +29,16 @@ jobs:
     name: Test on Linux 
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:14.1-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: ttrack
+        ports:
+          - 5432:5432
+
     steps:
     - uses: actions/checkout@v3
     - name: Set up python ${{ matrix.python-version }}
@@ -45,15 +55,7 @@ jobs:
       run: |
         python3 -m unittest discover -s tests/app
 
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: ttrack
-        ports:
-          - 5432:5432
+    
 
 
 
