@@ -15,7 +15,7 @@ class TestTtrackE2E(unittest.TestCase):
         self._start_task()
    
     def test_check_if_task_exists(self):
-        output = self._get_task_by_status("RUNNING")
+        output = self._get_task_by_name()
         self.assertIn(self.task_name, output)
 
     def test_check_if_task_is_running(self):
@@ -80,6 +80,19 @@ class TestTtrackE2E(unittest.TestCase):
         ],  capture_output=True)
 
         out = subprocess.run(["grep", status], input=ps.stdout, capture_output=True)
+
+        return str(out.stdout.decode('utf-8').strip())
+
+    def _get_task_by_name(self):
+        ps = subprocess.run([
+            "python3",
+            "-m",
+            "ttrack",
+            "list",
+            "--tasks"
+        ],  capture_output=True)
+
+        out = subprocess.run(["grep", self.name], input=ps.stdout, capture_output=True)
 
         return str(out.stdout.decode('utf-8').strip())
 
