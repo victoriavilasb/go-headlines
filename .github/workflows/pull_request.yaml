@@ -7,7 +7,7 @@ on:
 jobs:
   test_on_mac:
     name: Test on MacOS
-    runs-on: windows-latest
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v3
@@ -52,6 +52,14 @@ jobs:
     - name: Unit test
       run: |
         python -m unittest discover -s tests/app
+
+    - name: Start containers
+      run: |
+        docker-compose -f "docker-compose.yaml" up -d db
+
+    - name: Unit test
+      run: |
+        python -m unittest discover -s tests/test_e2e.py
 
   test_on_windows:
     name: Test on Windows
