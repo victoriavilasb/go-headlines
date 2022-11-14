@@ -9,6 +9,7 @@ jobs:
     name: Test on MacOS
     runs-on: macos-latest
 
+
     services:
       postgres:
         image: postgres:14.1-alpine
@@ -26,6 +27,8 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
+    - uses: docker-practice/actions-setup-docker@master
+    
     - name: Install dependencies
       run: |
         python3 -m pip install --upgrade pip 
