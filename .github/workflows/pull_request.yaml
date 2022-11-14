@@ -53,10 +53,9 @@ jobs:
         services: |
           db
 
-    - name: e2e tests
-      run: |
+    - run: |
         docker ps
-        python3 -m unittest tests/test_e2e.py
+        alembic upgrade head
 
   test_on_windows:
     name: Test on Windows
