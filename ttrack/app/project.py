@@ -15,10 +15,10 @@ class ProjectApplication:
         return self.storage.create_project(self.name)
 
     def archive(self):
-        return self.storage.update_project_status(self.name, ProjectStatus.archived)
+        return self.storage.update_project_status(self.name, ProjectStatus.archived.value)
 
     def activate(self):
-        return self.storage.update_project_status(self.name, ProjectStatus.active)
+        return self.storage.update_project_status(self.name, ProjectStatus.active.value)
 
     def list(self, status):
         app_status = None
