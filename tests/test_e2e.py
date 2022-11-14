@@ -116,7 +116,7 @@ def config_environment():
         "--storage",
         "database",
         "--uri",
-        "postgresql://postgres:postgres@localhost:5432/ttrack"
+        "postgresql://postgres:postgres@0.0.0.0:5432/ttrack"
     ])
 
     # run database migrations
