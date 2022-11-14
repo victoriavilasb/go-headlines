@@ -52,6 +52,8 @@ jobs:
         down-flags: "--volumes"
         services: |
           db
+      run: |
+        docker ps
 
   test_on_windows:
     name: Test on Windows
