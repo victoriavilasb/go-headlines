@@ -45,17 +45,17 @@ jobs:
       run: |
         python3 -m unittest discover -s tests/app
 
-    - name: Start containers 
-      uses: isbang/compose-action@v1.4.0
-      with:
-        compose-file: "docker-compose.yaml"
-        down-flags: "--volumes"
-        services: |
-          db
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: ttrack
+        ports:
+          - 5432:5432
 
-    - run: |
-        docker ps
-        alembic upgrade head
+
 
   # test_on_windows:
   #   name: Test on Windows
